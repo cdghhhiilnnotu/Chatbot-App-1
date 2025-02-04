@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings View</title>
+    <link rel="stylesheet" href="../styles/settings.css">
+</head>
+<body>
+    <div class="tab-container">
+        <div class="tabs">
+            <button id="display-btn" class="display-btn">Display</button>
+            <button id="about-btn" class="about-btn">Abouts</button>
+        </div>
+        <div class="exit-setting" id="exit-btn">
+            <img id="exit-img" src="../assets/light/exit.svg" alt="Exit Settings" />
+        </div>
+    </div>
+    <div class="tab-main" id="tab-main">
+        <div class="tab-display">
+            <div class="display-avatar">
+                <img id="avatar-img" class="avatar-img" src="https://via.placeholder.com/100" alt="Avatar">
+                <div id="avatar-btn" class="avatar-btn">
+                    <img src="../assets/light/edit.svg" alt="Edit Avatar" />
+                    <div>Thay đổi</div>
+                </div>
+                <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+            </div>
+            <div class="display-infor">
+                <div class="infor-title">THÔNG TIN CÁ NHÂN</div>
+                <div class="infor-box infor-username">
+                    <div class="infor-tag">Mã sinh viên</div>
+                    <div class="infor-divider"></div>
+                    <div class="infor-text info-text-username"></div>
+                </div>
+                <div class="infor-box infor-name">
+                    <div class="infor-tag">Họ và tên</div>
+                    <div class="infor-divider"></div>
+                    <div class="infor-text info-text-name"></div>
+                </div>
+                <div class="infor-box info-password">
+                    <div class="infor-tag">Mật khẩu</div>
+                    <div class="infor-divider"></div>
+                    <div class="infor-text info-text-password"></div>
+                </div>
+                <div id="logout-btn" class="logout-btn">
+                    <img src="../assets/light/logout.svg" alt="Logout" />
+                    <div>Đăng xuất</div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-about" >
+            <h1>Chatbot Hỗ Trợ Sinh Viên</h1>
+            <div class="about-title">Trường Đại học Kiến trúc Hà Nội</div>
+            <div class="about-text">
+                Trường Đại học Kiến trúc Hà Nội là một trong những trường hàng đầu về đào tạo kiến trúc, quy hoạch và xây dựng tại Việt Nam.
+                Trường cung cấp các chương trình đào tạo chất lượng cao, giúp sinh viên phát triển tư duy sáng tạo và kỹ năng chuyên môn.
+            </div>
+            <br>
+            <div class="about-title">Chatbot Sử Dụng LLM</div>
+            <div class="about-text">
+                Chatbot được xây dựng trên nền tảng mô hình ngôn ngữ lớn (LLM - Large Language Model), giúp sinh viên có thể tra cứu thông tin nhanh chóng về lịch học, giáo trình, và các thông tin quan trọng khác.
+            </div>
+            <br>
+            <div class="about-title">Cách Xem Lịch Sử Trò Chuyện</div>
+            <div class="about-text">
+                Để xem lại lịch sử trò chuyện, sinh viên có thể truy cập mục "Lịch sử" trong giao diện chatbot. Hệ thống sẽ lưu trữ các cuộc hội thoại gần nhất để bạn dễ dàng tham khảo lại.
+            </div>
+        </div>
+    </div>
+    <!-- <div id="tab-main" class="tab-main"></div> -->
+    <script src="../scripts/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+.tab-container {
+    background-color: var(--chatbar-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.tabs {
+    margin-right: 10px;
+    padding-top: 10px;
+}
+
+.tabs button {
+    height: 40px;
+    width: 150px;
+    border-radius: 10px 10px 0 0;
+    background-color: transparent;
+    color: var(--button-text-color);
+    border: 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tabs button:hover {
+    background-color: var(--button-hover-color);
+}
+
+.tabs button.active-btn {
+    background-color: var(--item-bg-color);
+}
+
+.exit-setting {
+    margin-left: 10x;
+    display: flex;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.exit-setting:hover{
+    background-color: var(--button-hover-color);
+}
+
+.tab-main{
+    display: flex;
+    width: 200%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.tab-display, .tab-about {
+    width: 100%;
+    height: 100vh;
+}
+
+.tab-slide-left {
+    transform: translateX(-50%);
+}
+
+.tab-display {
+    display: flex;
+}
+
+.avatar-img {
+    width: 70%; /* 70% of viewport width */
+    height: calc(70% * 0.75); /* Makes a 4:3 rectangle */
+    object-fit: cover;
+}
+
+
+#avatar-input {
+    width: 100px;
+    height: 100px;
+}
+
+.display-avatar, .display-infor {
+    width: 50%;
+}
+
+.display-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.display-infor {
+    padding: 10px;
+}
+
+.avatar-btn {
+    background-color: var(--setting-btn-hover-color);
+    width: 130px;
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.avatar-btn:hover{
+    background-color: var(--button-hover-color);
+}
+
+.logout-btn {
+    background-color: var(--setting-btn-hover-color);
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.logout-btn:hover{
+    background-color: var(--button-hover-color);
+}
+
+
+/* .display-infor {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+} */
+
+.infor-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--button-text-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.infor-username, 
+.infor-name, 
+.info-password {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--others-color);
+    border-radius: 5px;
+    position: relative;
+    height: 30px;
+    color: var(--button-text-color);
+    align-items: center;
+}
+
+.info-password {
+    display: flex;
+    cursor: pointer;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.password-hidden::after {
+    content: 'show';
+}
+
+.password-visible::after {
+    content: 'hide';
+}
+
+.infor-box {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.infor-divider {
+    width: 3px;
+    min-height: 20px;
+    background-color: var(--others-color);
+    max-height: 20px;
+    margin: 0 5px;
+    border-radius: 10px;
+}
+
+.infor-text {
+    overflow-x: hidden;
+}
+
+.tab-about h1{
+    margin: 15px 10px 10px 10px;
+}
+
+.about-title {
+    font-size: 30px;
+    font-style: bold;
+    font-weight: 100;
+    margin: 5px 10px;
+}
+
+.about-text {
+    font-size: 20px;
+    font-weight: 100;
+    margin: 5px 10px;
+}

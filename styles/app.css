@@ -1,0 +1,213 @@
+/* Sidebar - Begin*/
+.sidebar {
+    background-color: var(--chatbar-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 70px;
+    border-radius: 5px 0px 0px 5px;
+    overflow: hidden;
+}
+/* Sidebar - End*/
+
+/* Add Chat - Begin*/
+.add-chat {
+    background-color: var(--item-bg-color);
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    color: var(--button-text-color);
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 5px; /* Space below create-chat */
+    margin-top: 10px;
+}
+
+.add-chat:hover {
+    background-color: var(--button-hover-color);
+}
+
+.add-chat img {
+    width: 50%;
+    height: 50%;
+}
+/* Add Chat - End*/
+
+/* Divider - Begin*/
+.divider {
+    width: 40px;
+    min-height: 2px;
+    background-color: var(--others-color);
+    max-height: 2px;
+    margin: 5px 0;
+}
+/* Divider - End*/
+
+/* Chat Container - Begin*/
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1; /* Takes up the remaining space */
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 3px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: var(--others-color);
+    border-radius: 10px;
+}
+
+.chat {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: var(--item-bg-color);
+    border-radius: 50%;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: border-radius 0.3s, background-color 0.3s;
+    flex-shrink: 0;
+}
+
+.chat:hover {
+    background-color: var(--button-hover-color);
+}
+
+.chat:hover, .chat.active {
+    border-radius: 16px;
+}
+
+
+.chat.active::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 30px;
+    background-color: var(--button-text-color);
+    border-radius: 0 4px 4px 0;
+}
+/* Chat Container - End*/
+
+/* Setting button - Begin*/
+.setting-btn {
+    bottom: 10px;
+    background-color: transparent;
+    color: var(--button-text-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    padding: 3px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.setting-btn:hover {
+    box-shadow: 0 0 0 2px var(--setting-btn-hover-color);
+}
+
+.setting-btn.active{
+    box-shadow: 0 0 0 2px var(--setting-btn-active-color);
+}
+
+.setting-btn img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+/* Setting button - End*/
+
+/* Main Content - Begin*/
+.main-content{
+    background-color: var(--item-bg-color);
+    height: 100%;
+    width: 100%;
+    border-radius: 0px 5px 5px 0px;
+}
+/* Main Content - End*/
+
+/* Chat View - Begin*/
+#chat-view {
+    background-color: rebeccapurple;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    border-radius: 0 5px 5px 0;
+    overflow: hidden;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px; /* Khoảng cách 5px với viền */
+    height: 50px; /* Điều chỉnh chiều cao theo nhu cầu */
+    background-color: var(--chatbar-color);
+    border-radius: 0 5px 0 0;
+}
+
+.header-info h2 {
+    margin-left: 5px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.exit-chat {
+    background-color: transparent;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    color: var(--button-text-color);
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.exit-chat:hover{
+    background-color: var(--button-hover-color);
+}
+/* Chat View - End*/
+
+/* Setting View - Begin */
+#setting-view {
+    background-color: var(--item-bg-color);
+    height: 100%;
+    width: 100%;
+    border-radius: 0 5px 5px 0;
+    overflow: hidden;
+}
+/* Setting View - End */
+

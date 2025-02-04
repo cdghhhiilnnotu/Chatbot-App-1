@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel</title>
+    <link rel="stylesheet" href="../styles/chat.css">
+</head>
+<body>
+    <div class="chat-messages">
+        <!-- Tin nhắn sẽ được thêm vào đây -->
+    </div>
+    <div class="chat-input-container">
+        <textarea type="text" class="chat-input" placeholder=""></textarea>
+    </div>
+    <script>
+            const textarea = document.querySelector('.chat-input');
+            textarea.addEventListener('input', () => {
+                textarea.style.height = '40px';
+                textarea.style.height = Math.min(textarea.scrollHeight, 70) + 'px';
+            });
+    </script>
+    <script src="../scripts/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trường Đại học Kiến Trúc Hà Nội</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/app.css">
+    <link rel="stylesheet" href="../styles/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-box">
+                <h2>Xin chào! Tôi là AIMAGE.</h2>
+                <input type="text" id="username" placeholder="Username" />
+                <input type="password" id="password" placeholder="Password" />
+                <button id="login-btn">Đăng nhập</button>
+            </div>
+            <div class="login-fail"></div>
+        </div>
+        <div class="app-container">
+            <!-- Thanh dọc bên trái -->
+            <div class="sidebar">
+                <div id="create-chat" class="add-chat">
+                    <img id="add-img" src="../assets/light/add.svg" alt="Add Chat" />
+                </div>
+                <div class="divider"></div>
+                <div class="chat-container"></div>
+                <div class="divider"></div>
+                <div id="setting-button" class="setting-btn">
+                    <img id="setting-img" src="../assets/avatar.png" alt="Setting Icon" />
+                </div>
+            </div>
+
+            <!-- Nội dung chính -->
+            <div class="main-content">
+                <div id="default-view">
+                    
+                </div>
+                <div id="chat-view" style="display: none;">
+                    
+                </div>
+                <div id="setting-view" style="display: none;">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let container = document.querySelector('.container');
+        document.getElementById('username').focus()
+    </script>
+    <!-- <script src="../scripts/app.js"></script> -->
+    <script src="../scripts/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+:root{
+    --background-color: rgba(47, 49, 54, 1);
+    --chatbar-color: rgba(32, 34, 37, 1);
+    --item-bg-color: rgba(54, 57, 63, 1);
+    --others-color: rgba(255, 255, 255, 0.1);
+    --button-text-color: rgba(220, 221, 222, 1);
+    --button-hover-color: rgba(114, 118, 125, 1);
+    --setting-btn-active-color: rgba(73, 228, 65, 1);
+    --setting-btn-hover-color: rgba(228, 65, 65, 1);
+    --input-bg-color: rgba(64, 68, 75, 1);
+}
+
+.login-box {
+    width: 30%;
+} 
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    color: var(--button-text-color);
+}
+
+.slide-left {
+    transform: translateX(-100vw);
+}
+
+.container {
+    width: 200vw;
+    height: 100vh;
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.login-container, .app-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #ff5555; */
+    background-color: var(--background-color);
+}
+
+.app-container {
+    background-color: var(--background-color);
+    /* background-color: #5555ff; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px;
+    gap: 5px;
+}
