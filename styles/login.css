@@ -1,15 +1,15 @@
 .login-box {
-    background-color: #202225; /* Nền form */
+    background-color: var(--chatbar-color); /* Nền form */
     padding: 40px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-    color: white;
+    color: var(--button-text-color);
 }
 
 .login-box h1 {
     margin-bottom: 20px;
-    color: white;
+    color: var(--button-text-color);
 }
 
 .login-box input {
@@ -19,15 +19,15 @@
     margin-bottom: 15px;
     border: none;
     border-radius: 5px;
-    background-color: #36393f;
-    color: white;
+    background-color: var(--input-bg-color);
+    color: var(--button-text-color);
 }
 
 .login-box button {
     width: 100%;
     box-sizing: border-box;
-    background-color: #5865f2;
-    color: white;
+    background-color: var(--button-login-color);
+    color: var(--button-text-color);
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -36,7 +36,7 @@
 }
 
 .login-box button:hover {
-    background-color: #4752c4; /* Màu hover */
+    background-color: var(--button-hover-color); /* Màu hover */
 }
 
 .login-fail {
@@ -44,12 +44,12 @@
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    color: white;
-    background-color: rgba(255, 0, 0, 0.8);
+    color: var(--button-text-color);
+    background-color: var(--setting-btn-hover-color);
     padding: 10px 20px;
     border-radius: 5px;
     display: none;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.15s ease-in-out;
 }
 
 @keyframes fadeIn {

@@ -155,7 +155,7 @@
 
 /* Chat View - Begin*/
 #chat-view {
-    background-color: rebeccapurple;
+    background-color: var(--item-bg-color);
     display: flex;
     flex-direction: column;
     align-items: center;

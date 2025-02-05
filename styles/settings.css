@@ -61,8 +61,8 @@
 }
 
 .avatar-img {
-    width: 70%; /* 70% of viewport width */
-    height: calc(70% * 0.75); /* Makes a 4:3 rectangle */
+    width: 70%; 
+    height: calc(70% * 0.75); 
     object-fit: cover;
 }
 
@@ -118,17 +118,6 @@
 .logout-btn:hover{
     background-color: var(--button-hover-color);
 }
-
-
-/* .display-infor {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-} */
 
 .infor-title {
     font-size: 18px;

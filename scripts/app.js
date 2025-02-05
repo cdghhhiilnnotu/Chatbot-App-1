@@ -1,4 +1,4 @@
-console.log('app.js đã được tải thành công!');
+const { userInfo } = require('os');
 const ChatView = require('../scripts/chat.js');
 const SettingView = require('../scripts/settings.js');
 const fs = require('fs');
@@ -10,6 +10,7 @@ function generateRandomString(length) {
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+    console.log(result)
     return result;
 }
 
@@ -24,214 +25,10 @@ function getCurrentDateTime() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     const chatContainer = document.querySelector('.chat-container');
-//     const add_img = document.getElementById('add-img');
-            
-//     const chatHistoryFile = 'chat_histories.json';
-//     let chatHistory = {};
-
-//     // Load chat history from file
-//     if (fs.existsSync(chatHistoryFile)) {
-//         chatHistory = JSON.parse(fs.readFileSync(chatHistoryFile, 'utf-8'));
-//     }
-
-//     // Create chat elements based on chat history
-//     Object.keys(chatHistory).forEach(groupName => {
-//         const existingChat = document.createElement('div');
-//         existingChat.classList.add('chat');
-//         existingChat.textContent = groupName.slice(0, 2).toUpperCase();
-
-//         existingChat.addEventListener('click', () => {
-//             const setting_btn = document.getElementById('setting-button');
-//             setting_btn.classList.remove('active');
-            
-//             // Remove active class from all chats
-//             document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
-            
-//             // Add active class to clicked chat
-//             existingChat.classList.add('active');
-
-//             const defaultView = document.getElementById('default-view');
-//             const chatView = document.getElementById('chat-view');
-//             const settingView = document.getElementById('setting-view');
-
-//             defaultView.style.display = 'none';
-//             settingView.style.display = 'none';
-//             chatView.style.display = 'block';
-
-//             chatView.innerHTML = `
-//                 <div class="chat-header">
-//                     <div class="header-info">
-//                         <h2>Phòng Đào tạo</h2>
-//                     </div>
-//                     <div class="header-actions">
-//                         <div class="exit-chat">
-//                             <img src="../assets/light/exit.svg" alt="Exit Chat" />
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div class="chat-area"></div>
-//             `;
-
-//             const chatArea = chatView.querySelector('.chat-area');
-//             const channelName = getCurrentDateTime();
-
-//             fetch('../views/chat.html')
-//                 .then(response => response.text())
-//                 .then(html => {
-//                     chatArea.innerHTML = html;
-//                     new ChatView(groupName, channelName);
-//                 })
-//                 .catch(error => console.error('Error:', error));
-
-//             chatView.querySelector('.exit-chat').addEventListener('click', () => {
-//                 existingChat.classList.remove('active');
-//                 chatView.style.display = 'none';
-//                 defaultView.style.display = 'block';
-//             });
-//         });
-
-//         chatContainer.appendChild(existingChat);
-//     });
-
-//     // Handle create new chat
-//     const create_chat = document.getElementById('create-chat');
-//     if (create_chat) {
-//         create_chat.addEventListener('click', () => {
-//             const setting_btn = document.getElementById('setting-button');
-//             setting_btn.classList.remove('active');
-//             const chat_name = generateRandomString(10);
-        
-//             if (chat_name.trim() !== '') {
-//                 const new_chat = document.createElement('div');
-//                 new_chat.classList.add('chat');
-//                 new_chat.textContent = chat_name.slice(0, 2).toUpperCase();
-        
-//                 new_chat.addEventListener('click', () => {
-//                     setting_btn.classList.remove('active');
-//                     document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
-//                     new_chat.classList.add('active');
-        
-//                     const defaultView = document.getElementById('default-view');
-//                     const chatView = document.getElementById('chat-view');
-//                     const settingView = document.getElementById('setting-view');
-        
-//                     defaultView.style.display = 'none';
-//                     settingView.style.display = 'none';
-//                     chatView.style.display = 'block';
-        
-//                     chatView.innerHTML = `
-//                         <div class="chat-header">
-//                             <div class="header-info">
-//                                 <h2>Phòng Đào tạo</h2>
-//                             </div>
-//                             <div class="header-actions">
-//                                 <div class="exit-chat">
-//                                     <img src="../assets/light/exit.svg" alt="Exit Chat" />
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div class="chat-area"></div>
-//                     `;
-        
-//                     const chatArea = chatView.querySelector('.chat-area');
-//                     const channelName = getCurrentDateTime();
-        
-//                     fetch('../views/chat.html')
-//                         .then(response => response.text())
-//                         .then(html => {
-//                             chatArea.innerHTML = html;
-//                             new ChatView(chat_name, channelName);
-//                         })
-//                         .catch(error => console.error('Error:', error));
-        
-//                     chatView.querySelector('.exit-chat').addEventListener('click', () => {
-//                         new_chat.classList.remove('active');
-//                         chatView.style.display = 'none';
-//                         defaultView.style.display = 'block';
-//                     });
-//                 });
-        
-//                 // Insert the new chat at the top of the chatContainer
-//                 chatContainer.insertBefore(new_chat, chatContainer.firstChild);
-        
-//                 // Add the new chat to the history with the specified structure
-//                 const newChatData = {
-//                     createdAt: getCurrentDateTime(),
-//                     messages: []
-//                 };
-                
-//                 // If chatHistory is not yet initialized, initialize it as an empty object
-//                 if (typeof chatHistory !== 'object') {
-//                     chatHistory = {};
-//                 }
-        
-//                 // Add the new chat to the history object using the chat_name as the key
-//                 chatHistory[chat_name] = newChatData;
-        
-//                 // Save the updated history to the file
-//                 fs.writeFileSync(chatHistoryFile, JSON.stringify(chatHistory, null, 2), 'utf-8');
-//             }
-//         });
-        
-//     }
-
-//     const setting_btn = document.getElementById('setting-button');
-//     if (setting_btn) {
-//         setting_btn.addEventListener('click', () => {
-//             setting_btn.classList.add('active');
-//             document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
-//             document.getElementById('chat-view').style.display = 'none';
-
-//             const defaultView = document.getElementById('default-view');
-//             const chatView = document.getElementById('chat-view');
-//             const settingView = document.getElementById('setting-view');
-
-//             defaultView.style.display = 'none';
-//             settingView.style.display = 'block';
-//             chatView.style.display = 'none';
-
-//             settingView.innerHTML = `
-//                 <div class="setting-area"></div>
-//             `;
-
-//             const settingArea = settingView.querySelector('.setting-area');
-//             const channelName = getCurrentDateTime();
-
-//             fetch('../views/settings.html')
-//             .then(response => response.text())
-//             .then(html => {
-//                 settingArea.innerHTML = html;
-
-//                 // Dynamically load settings.css
-//                 const link = document.createElement('link');
-//                 link.rel = 'stylesheet';
-//                 link.href = '../styles/settings.css';
-//                 document.head.appendChild(link);
-
-//                 const setting_view = new SettingView(document.getElementById("setting-img"));
-//                 const exit_setting_btn = setting_view.get_exit_btn()
-
-//                 exit_setting_btn.addEventListener('click', () => {
-//                     settingView.style.display = 'none';
-//                     defaultView.style.display = 'block';
-//                     setting_btn.classList.remove('active');
-//                 });
-//             })
-//             .catch(error => console.error('Error:', error));
-
-//             // settingView.querySelector('.exit-chat').addEventListener('click', () => {
-//             //     new_chat.classList.remove('active');
-//             //     settingView.style.display = 'none';
-//             //     defaultView.style.display = 'block';
-//             // });
-//         });
-//     }
-// });
-
 class App {
     constructor(){
+        this.name = JSON.parse(localStorage.getItem('user_infors')).username
+        this.history_file = `${this.name}.json`;
         this.init();
     }
 
@@ -240,43 +37,35 @@ class App {
     }
 
     setup(){
-        const chatContainer = document.querySelector('.chat-container');
-        const add_img = document.getElementById('add-img');
-                
-        const chatHistoryFile = 'chat_histories.json';
-        let chatHistory = {};
+        let chat_history = {};
     
-        // Load chat history from file
-        // if (fs.existsSync(chatHistoryFile)) {
-        //     chatHistory = JSON.parse(fs.readFileSync(chatHistoryFile, 'utf-8'));
-        // }
-        chatHistory = JSON.parse(localStorage.getItem('user_chats'));
-        console.log(chatHistory)
+        // Load chat history
+        chat_history = JSON.parse(localStorage.getItem('user_chats'));
+        console.log(chat_history)
         // Create chat elements based on chat history
-        Object.keys(chatHistory).forEach(groupName => {
-            const existingChat = document.createElement('div');
-            existingChat.classList.add('chat');
-            existingChat.textContent = groupName.slice(0, 2).toUpperCase();
+        Object.keys(chat_history).forEach(group_name => {
+            const existing_chat = document.createElement('div');
+            existing_chat.classList.add('chat');
+            existing_chat.textContent = group_name.slice(0, 2).toUpperCase();
     
-            existingChat.addEventListener('click', () => {
-                const setting_btn = document.getElementById('setting-button');
+            existing_chat.addEventListener('click', () => {
                 setting_btn.classList.remove('active');
                 
                 // Remove active class from all chats
                 document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
                 
                 // Add active class to clicked chat
-                existingChat.classList.add('active');
+                existing_chat.classList.add('active');
     
-                const defaultView = document.getElementById('default-view');
-                const chatView = document.getElementById('chat-view');
-                const settingView = document.getElementById('setting-view');
+        
+                // const chat_view = document.getElementById('chat-view');
+                // const setting_view = document.getElementById('setting-view');
     
-                defaultView.style.display = 'none';
-                settingView.style.display = 'none';
-                chatView.style.display = 'block';
+                default_view.style.display = 'none';
+                setting_view.style.display = 'none';
+                chat_view.style.display = 'block';
     
-                chatView.innerHTML = `
+                chat_view.innerHTML = `
                     <div class="chat-header">
                         <div class="header-info">
                             <h2>Phòng Đào tạo</h2>
@@ -290,32 +79,31 @@ class App {
                     <div class="chat-area"></div>
                 `;
     
-                const chatArea = chatView.querySelector('.chat-area');
-                const channelName = getCurrentDateTime();
+                const chat_area = chat_view.querySelector('.chat-area');
+                const channel_name = getCurrentDateTime();
     
                 fetch('../views/chat.html')
                     .then(response => response.text())
                     .then(html => {
-                        chatArea.innerHTML = html;
-                        new ChatView(groupName, channelName);
+                        chat_area.innerHTML = html;
+                        new ChatView(group_name, channel_name);
                     })
                     .catch(error => console.error('Error:', error));
     
-                chatView.querySelector('.exit-chat').addEventListener('click', () => {
-                    existingChat.classList.remove('active');
-                    chatView.style.display = 'none';
-                    defaultView.style.display = 'block';
+                chat_view.querySelector('.exit-chat').addEventListener('click', () => {
+                    existing_chat.classList.remove('active');
+                    chat_view.style.display = 'none';
+                    default_view.style.display = 'block';
                 });
             });
     
-            chatContainer.appendChild(existingChat);
+            chat_container.insertBefore(existing_chat, chat_container.firstChild);
         });
     
         // Handle create new chat
         const create_chat = document.getElementById('create-chat');
         if (create_chat) {
             create_chat.addEventListener('click', () => {
-                const setting_btn = document.getElementById('setting-button');
                 setting_btn.classList.remove('active');
                 const chat_name = generateRandomString(10);
             
@@ -329,15 +117,11 @@ class App {
                         document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
                         new_chat.classList.add('active');
             
-                        const defaultView = document.getElementById('default-view');
-                        const chatView = document.getElementById('chat-view');
-                        const settingView = document.getElementById('setting-view');
+                        default_view.style.display = 'none';
+                        setting_view.style.display = 'none';
+                        chat_view.style.display = 'block';
             
-                        defaultView.style.display = 'none';
-                        settingView.style.display = 'none';
-                        chatView.style.display = 'block';
-            
-                        chatView.innerHTML = `
+                        chat_view.innerHTML = `
                             <div class="chat-header">
                                 <div class="header-info">
                                     <h2>Phòng Đào tạo</h2>
@@ -351,26 +135,26 @@ class App {
                             <div class="chat-area"></div>
                         `;
             
-                        const chatArea = chatView.querySelector('.chat-area');
-                        const channelName = getCurrentDateTime();
+                        const chat_area = chat_view.querySelector('.chat-area');
+                        const channel_name = getCurrentDateTime();
             
                         fetch('../views/chat.html')
                             .then(response => response.text())
                             .then(html => {
-                                chatArea.innerHTML = html;
-                                new ChatView(chat_name, channelName);
+                                chat_area.innerHTML = html;
+                                new ChatView(chat_name, channel_name);
                             })
                             .catch(error => console.error('Error:', error));
             
-                        chatView.querySelector('.exit-chat').addEventListener('click', () => {
+                        chat_view.querySelector('.exit-chat').addEventListener('click', () => {
                             new_chat.classList.remove('active');
-                            chatView.style.display = 'none';
-                            defaultView.style.display = 'block';
+                            chat_view.style.display = 'none';
+                            default_view.style.display = 'block';
                         });
                     });
             
-                    // Insert the new chat at the top of the chatContainer
-                    chatContainer.insertBefore(new_chat, chatContainer.firstChild);
+                    // Insert the new chat at the top of the chat_container
+                    chat_container.insertBefore(new_chat, chat_container.firstChild);
             
                     // Add the new chat to the history with the specified structure
                     const newChatData = {
@@ -378,42 +162,39 @@ class App {
                         messages: []
                     };
                     
-                    // If chatHistory is not yet initialized, initialize it as an empty object
-                    if (typeof chatHistory !== 'object') {
-                        chatHistory = {};
+                    // If chat_history is not yet initialized, initialize it as an empty object
+                    if (typeof chat_history !== 'object') {
+                        chat_history = {};
                     }
             
                     // Add the new chat to the history object using the chat_name as the key
-                    chatHistory[chat_name] = newChatData;
-            
+                    chat_history[chat_name] = newChatData;
                     // Save the updated history to the file
-                    fs.writeFileSync(chatHistoryFile, JSON.stringify(chatHistory, null, 2), 'utf-8');
+                    // fs.writeFileSync(this.history_file, JSON.stringify(chat_history, null, 2), 'utf-8');
                 }
             });
             
         }
     
-        const setting_btn = document.getElementById('setting-button');
         if (setting_btn) {
             setting_btn.addEventListener('click', () => {
                 setting_btn.classList.add('active');
                 document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
                 document.getElementById('chat-view').style.display = 'none';
     
-                const defaultView = document.getElementById('default-view');
-                const chatView = document.getElementById('chat-view');
-                const settingView = document.getElementById('setting-view');
+                // const chat_view = document.getElementById('chat-view');
+                // const setting_view = document.getElementById('setting-view');
     
-                defaultView.style.display = 'none';
-                settingView.style.display = 'block';
-                chatView.style.display = 'none';
+                default_view.style.display = 'none';
+                setting_view.style.display = 'block';
+                chat_view.style.display = 'none';
     
-                settingView.innerHTML = `
+                setting_view.innerHTML = `
                     <div class="setting-area"></div>
                 `;
     
-                const settingArea = settingView.querySelector('.setting-area');
-                const channelName = getCurrentDateTime();
+                const settingArea = setting_view.querySelector('.setting-area');
+                const channel_name = getCurrentDateTime();
     
                 fetch('../views/settings.html')
                 .then(response => response.text())
@@ -426,12 +207,12 @@ class App {
                     link.href = '../styles/settings.css';
                     document.head.appendChild(link);
     
-                    const setting_view = new SettingView(document.getElementById("setting-img"));
-                    const exit_setting_btn = setting_view.get_exit_btn()
+                    const setting_viewer = new SettingView(document.getElementById("setting-img"));
+                    const exit_setting_btn = setting_viewer.get_exit_btn()
     
                     exit_setting_btn.addEventListener('click', () => {
-                        settingView.style.display = 'none';
-                        defaultView.style.display = 'block';
+                        setting_view.style.display = 'none';
+                        default_view.style.display = 'block';
                         setting_btn.classList.remove('active');
                     });
                 })
@@ -440,18 +221,5 @@ class App {
         }
     }
 }
-
-// // Xử lý sự kiện logout
-// logoutBtn.addEventListener('click', () => {
-//     // Xóa thông tin người dùng
-//     localStorage.removeItem('userInfo');
-    
-//     // Reset form đăng nhập
-//     document.getElementById('username').value = '';
-//     document.getElementById('password').value = '';
-    
-//     // Chuyển về màn hình login
-//     container.classList.remove('slide-left');
-// });
 
 module.exports = App;

@@ -1,13 +1,15 @@
 const fs = require('fs');
 
 class ChatView {
-    constructor(groupName, channelName, serverUrl = "http://127.0.0.1:1237") {
-        this.groupName = groupName;
-        this.channelName = channelName;
-        this.serverUrl = serverUrl;
-        this.channelId = `${groupName}_${channelName}`;
-        this.messageFile = 'chat_histories.json'; // Use chat_histories.json file
-        this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    constructor(group_name, channel_name, message_file = 'chat_histories.json', server_url = "http://127.0.0.1:1237") {
+        this.group_name = group_name;
+        this.channel_name = channel_name;
+        this.server_url = server_url;
+        this.message_file = message_file;
+        this.user_infor = JSON.parse(localStorage.getItem('user_infor'));
+
+        this.chat_input = document.querySelector('.chat-input');
+        this.messages_container = document.querySelector('.chat-messages');
 
         this.init();
     }
@@ -19,78 +21,67 @@ class ChatView {
     }
 
     updateChannelInfo() {
-        const chatInput = document.querySelector('.chat-input');
-        if (chatInput) {
-            chatInput.placeholder = `Send a message to ${this.groupName}`;
+        if (this.chat_input) {
+            this.chat_input.placeholder = `Send a message to ${this.group_name}`;
         }
     }
 
     loadMessages() {
-        const messagesContainer = document.querySelector('.chat-messages');
-        if (messagesContainer) {
-            // Load chat history from the JSON file
-            // const chatHistory = JSON.parse(fs.readFileSync(this.messageFile, 'utf-8')) || {};
-            const chatHistory = JSON.parse(localStorage.getItem('user_chats'));
-            const messages = chatHistory[this.groupName]?.messages || [];
+        if (this.messages_container) {
+            const chat_history = JSON.parse(localStorage.getItem('user_chats'));
+            const messages = chat_history[this.group_name]?.messages || [];
 
             messages.forEach(({ type, text }) =>
-                this.displayMessage(text, messagesContainer, type)
+                this.displayMessage(text, this.messages_container, type)
             );
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            this.messages_container.scrollTop = this.messages_container.scrollHeight;
         }
     }
 
     setupChatInput() {
-        const chatInput = document.querySelector('.chat-input');
-        const messagesContainer = document.querySelector('.chat-messages');
-
-        if (chatInput && messagesContainer) {
-            chatInput.addEventListener('input', () => {
-                const rows = chatInput.value.split('\n').length;
-                chatInput.rows = Math.min(rows, 5);
+        if (this.chat_input && this.messages_container) {
+            this.chat_input.addEventListener('input', () => {
+                const rows = this.chat_input.value.split('\n').length;
+                this.chat_input.rows = Math.min(rows, 5);
             });
 
-            chatInput.addEventListener('keypress', async (e) => {
+            this.chat_input.addEventListener('keypress', async (e) => {
                 if (e.key === 'Enter' && !e.shiftKey && e.target.value.trim()) {
                     e.preventDefault();
                     const userMessage = e.target.value.trim();
                     e.target.value = ''; 
 
-                    this.saveMessage({ type: 'user', text: userMessage });
-                    this.displayMessage(userMessage, messagesContainer, 'user');
+                    this.saveMessage({ type: 'User', text: userMessage });
+                    this.displayMessage(userMessage, this.messages_container, 'User');
 
-                    await this.sendMessageToServer(userMessage, messagesContainer);
+                    await this.sendMessageToServer(userMessage);
 
-                    chatInput.rows = 1; 
-                    chatInput.focus(); 
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    this.chat_input.rows = 1; 
+                    this.chat_input.focus(); 
+                    this.messages_container.scrollTop = this.messages_container.scrollHeight;
                 }
             });
         }
     }
 
-    async sendMessageToServer(message, messagesContainer) {
+    async sendMessageToServer(message) {
         try {
-            const chatHistory = JSON.parse(fs.readFileSync(this.messageFile, 'utf-8')) || {};
-            const history = chatHistory[this.groupName]?.messages || [];
-            // console.log(history)
-        
             // Set a timeout limit for the fetch request (e.g., 5 seconds)
             const timeout = 5000;
-            const timeoutPromise = new Promise((_, reject) =>
+            const timeout_promise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Request Timeout')), timeout)
             );
         
             // Send the fetch request and race it with the timeout
             const response = await Promise.race([
-                fetch(`${this.serverUrl}/response/${this.userInfo.username}`, {
+                fetch(`${this.server_url}/response/${this.user_infor.username}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: message, chat_id: this.groupName }),
+                    body: JSON.stringify({ query: message, chat_id: this.group_name }),
                 }),
-                timeoutPromise,
+                timeout_promise,
             ]);
-            console.log(history)
+
             if (!response.body) {
                 console.error('No response body');
                 return;
@@ -100,82 +91,82 @@ class ChatView {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let done = false;
-                let responseText = '';
+                let response_text = '';
         
-                const messageDiv = this.createMessageElement(messagesContainer, 'server');
+                const message_div = this.createMessageElement(this.messages_container, 'AIMAGE');
         
                 while (!done) {
                     const { value, done: streamDone } = await reader.read();
                     done = streamDone;
                     const chunk = decoder.decode(value, { stream: true });
-                    responseText += chunk;
+                    response_text += chunk;
         
-                    const messageContent = messageDiv.querySelector('.message-content');
-                    if (messageContent) {
-                        messageContent.textContent = responseText;
+                    const message_content = message_div.querySelector('.message-content');
+                    if (message_content) {
+                        message_content.textContent = response_text;
                     }
         
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    this.messages_container.scrollTop = this.messages_container.scrollHeight;
                 }
         
-                this.saveMessage({ type: 'server', text: responseText });
+                this.saveMessage({ type: 'AIMAGE', text: response_text });
             } else {
                 const error = await response.json();
-                const errorMessage = `[${error.code}]: "${error.name}"`;
-                this.displayMessage(errorMessage, messagesContainer, 'server');
-                this.saveMessage({ type: 'server', text: errorMessage });
+                const error_message = `[${error.code}]: "${error.name}"`;
+                this.displayMessage(error_message, this.messages_container, 'AIMAGE');
+                this.saveMessage({ type: 'AIMAGE', text: error_message });
             }
         } catch (error) {
             console.error('Failed to fetch response from server:', error);
         
             // Handle timeout and other errors
-            const errorMessage = `[Error]: "${error.message}"`;
-            this.displayMessage(errorMessage, messagesContainer, 'server');
-            this.saveMessage({ type: 'server', text: errorMessage });
+            const error_message = `[Error]: "${error.message}"`;
+            this.displayMessage(error_message, this.messages_container, 'AIMAGE');
+            this.saveMessage({ type: 'AIMAGE', text: error_message });
         }
     }
 
     saveMessage(message) {
-        // Read the current chat history from the JSON file
-        let chatHistory = JSON.parse(fs.readFileSync(this.messageFile, 'utf-8')) || {};
+        let chat_history = JSON.parse(localStorage.getItem('user_chats'));
     
         // If the chat doesn't exist, initialize it
-        if (!chatHistory[this.groupName]) {
-            chatHistory[this.groupName] = { createdAt: this.channelName, messages: [] };
+        if (!chat_history[this.group_name]) {
+            chat_history[this.group_name] = { createdAt: this.channel_name, messages: [] };
         }
     
         // Add the new message to the chat history
-        chatHistory[this.groupName].messages.push(message);
+        chat_history[this.group_name].messages.push(message);
     
         // Keep only the last 10 messages
-        chatHistory[this.groupName].messages = chatHistory[this.groupName].messages.slice(-10);
+        chat_history[this.group_name].messages = chat_history[this.group_name].messages.slice(-10);
     
         // Save the updated chat history back to the JSON file
-        fs.writeFileSync(this.messageFile, JSON.stringify(chatHistory, null, 2), 'utf-8');
+        localStorage.setItem('user_chats', JSON.stringify(chat_history));
+        fs.writeFileSync(this.message_file, JSON.stringify(chat_history, null, 2), 'utf-8');
     }
 
-    displayMessage(message, container, type, messageDiv = null) {
-        if (!messageDiv) {
-            messageDiv = this.createMessageElement(container, type, message);
+    displayMessage(message, container, type, message_div = null) {
+        if (!message_div) {
+            message_div = this.createMessageElement(container, type, message);
         } else {
-            const messageContent = messageDiv.querySelector('.message-content');
-            if (messageContent) {
-                messageContent.textContent = message;
+            const message_content = message_div.querySelector('.message-content');
+            if (message_content) {
+                message_content.textContent = message;
             }
         }
     }
 
     createMessageElement(container, type, message = '') {
-        const messageDiv = document.createElement('div');
-        const imgSrc = type === 'User' ? '../assets/avatar.png' : '../assets/hau.png';
+        const message_div = document.createElement('div');
+        const img_src = type === 'User' ? '../assets/avatar.png' : '../assets/hau.png';
 
-        messageDiv.classList.add('message');
-        messageDiv.innerHTML = `
-            <img src="${imgSrc}" alt="${type} message" />
+        message_div.classList.add('message');
+        message_div.innerHTML = `
+            <img src="${img_src}" alt="${type} message" />
             <div class="message-content">${message}</div>
         `;
-        container.appendChild(messageDiv);
-        return messageDiv;
+        container.appendChild(message_div);
+        return message_div;
     }
 }
 

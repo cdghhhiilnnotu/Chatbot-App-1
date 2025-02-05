@@ -1,27 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Function to convert RGBA to HEX
-function rgbaToHex(rgba) {
-    const match = rgba.match(/rgba?\((\d+), (\d+), (\d+)/);
-    if (!match) return '#000000';
-    return `#${parseInt(match[1]).toString(16).padStart(2, '0')}${parseInt(match[2]).toString(16).padStart(2, '0')}${parseInt(match[3]).toString(16).padStart(2, '0')}`;
-}
-
-// Function to convert HEX to RGBA
-function hexToRgba(hex) {
-    const bigint = parseInt(hex.slice(1), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `rgba(${r}, ${g}, ${b}, 1)`;
-}
-
-function get_setting(settingsPath) {
-    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8')) || {};
-    return settings
-}
-
 class SettingView {
     constructor(setting_btn) {
         this.display_btn = document.getElementById('display-btn');
@@ -31,24 +10,25 @@ class SettingView {
         this.exit_btn = document.getElementById('exit-btn');
         this.avt_input = document.getElementById('avatar-input');
         this.avt_btn = document.getElementById('avatar-btn');
+        this.logout_btn = document.getElementById('logout-btn');
         this.setting_btn = setting_btn
         this.avatar_img = document.getElementById('avatar-img')
         this.avatar_img.src = setting_btn.src
-
+        this.username_text = document.querySelector('.info-text-username');
+        this.name_text = document.querySelector('.info-text-name');
+        this.password_text = document.querySelector('.info-text-password');
+        this.password_field = document.querySelector('.info-password');
+        this.user_infor = JSON.parse(localStorage.getItem('user_infor'));
+        
         this.init()
     }
 
     init() {
         this.setup_btn();
-        this.show_infor()
-        // this.display_to_main();
-        // this.color_picker_handler();
-        // this.set_avatar_handler();
+        this.show_infor();
     }
 
     setup_btn() {
-        // this.knowledge_tab.addEventListener('click', () => this.knowledge_to_main())
-        // this.display_tab.addEventListener('click', () => this.display_to_main())
         this.display_btn.addEventListener("click", () => {
             this.tabs.classList.remove('tab-slide-left');
             this.display_btn.classList.add('active-btn');
@@ -73,20 +53,20 @@ class SettingView {
                         self.setting_btn.src = e.target.result;
                         
                         // Convert base64 to buffer
-                        const base64Data = e.target.result.replace(/^data:image\/\w+;base64,/, '');
-                        const buffer = Buffer.from(base64Data, 'base64');
+                        const base64_data = e.target.result.replace(/^data:image\/\w+;base64,/, '');
+                        const buffer = Buffer.from(base64_data, 'base64');
                         
                         // Ensure the assets directory exists
-                        const avatarPath = path.join(__dirname, '../assets/avatar.png');
+                        const avatar_dath = path.join(__dirname, '../assets/avatar.png');
                         
                         // Create directory if it doesn't exist
-                        const directory = path.dirname(avatarPath);
+                        const directory = path.dirname(avatar_dath);
                         if (!fs.existsSync(directory)){
                             fs.mkdirSync(directory, { recursive: true });
                         }
                         
                         // Write file
-                        fs.writeFile(avatarPath, buffer, (err) => {
+                        fs.writeFile(avatar_dath, buffer, (err) => {
                             if (err) {
                                 console.error('Error saving avatar:', err);
                             } else {
@@ -105,30 +85,43 @@ class SettingView {
     }
 
     show_infor(){
-        const username_text = document.querySelector('.info-text-username');
-        const name_text = document.querySelector('.info-text-name');
-        const password_text = document.querySelector('.info-text-password');
-        const password_field = document.querySelector('.info-password');
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-        username_text.textContent = userInfo.username
-        name_text.textContent = userInfo.name
-        password_text.textContent = userInfo.password.replace(/./g, '•');
+        this.username_text.textContent = this.user_infor.username
+        this.name_text.textContent = this.user_infor.name
+        this.password_text.textContent = this.user_infor.password.replace(/./g, '•');
 
         let is_visible = false
-        password_field.addEventListener("click", ()=>{
+        this.password_field.addEventListener("click", ()=>{
             if (!is_visible){
-                password_text.textContent = userInfo.password
+                this.password_text.textContent = this.user_infor.password
                 is_visible = true
             }
             else{
-                password_text.textContent = userInfo.password.replace(/./g, '•');
+                this.password_text.textContent = this.user_infor.password.replace(/./g, '•');
                 is_visible = false
             }
         })
 
-    }
+        this.logout_btn.addEventListener("click", () =>{
+            localStorage.removeItem('user_infor');
+            localStorage.removeItem('user_chats');
 
+            // Reset form đăng nhập
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+
+            default_view.style.display = 'block';
+            setting_view.style.display = 'none';
+            chat_view.style.display = 'none';
+
+            setting_btn.classList.remove('active');
+
+            chat_container.replaceChildren();
+            fs.unlinkSync('chat_histories.json');
+            
+            // Chuyển về màn hình login
+            container.classList.remove('slide-left');
+        });
+    }
 }
 
 module.exports = SettingView;
