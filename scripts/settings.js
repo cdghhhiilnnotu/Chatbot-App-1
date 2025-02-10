@@ -51,7 +51,7 @@ class SettingView {
                         // Update image sources
                         self.avatar_img.src = e.target.result;
                         self.setting_btn.src = e.target.result;
-                        
+                        localStorage.setItem('avatar_src', e.target.result)
                         // Convert base64 to buffer
                         const base64_data = e.target.result.replace(/^data:image\/\w+;base64,/, '');
                         const buffer = Buffer.from(base64_data, 'base64');

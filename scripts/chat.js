@@ -1,10 +1,11 @@
 const fs = require('fs');
+const {server_url} = require('../scripts/utils.js');
 
 class ChatView {
-    constructor(group_name, channel_name, message_file = 'chat_histories.json', server_url = "http://127.0.0.1:1237") {
+    constructor(group_name, channel_name, message_file = 'chat_histories.json', serverurl = `${server_url}`) {
         this.group_name = group_name;
         this.channel_name = channel_name;
-        this.server_url = server_url;
+        this.server = serverurl;
         this.message_file = message_file;
         this.user_infor = JSON.parse(localStorage.getItem('user_infor'));
 
@@ -74,7 +75,7 @@ class ChatView {
         
             // Send the fetch request and race it with the timeout
             const response = await Promise.race([
-                fetch(`${this.server_url}/response/${this.user_infor.username}`, {
+                fetch(`${this.server}/response/${this.user_infor.username}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query: message, chat_id: this.group_name }),
@@ -157,8 +158,16 @@ class ChatView {
     }
 
     createMessageElement(container, type, message = '') {
+        console.log("'../assets/avatar.png'")
         const message_div = document.createElement('div');
-        const img_src = type === 'User' ? '../assets/avatar.png' : '../assets/hau.png';
+        let img_src;
+        if(localStorage.getItem('avatar_src')){
+            img_src = type === 'User' ? localStorage.getItem('avatar_src') : '../assets/hau.png';
+        }
+        else{
+            img_src = type === 'User' ? '../assets/avatar.png' : '../assets/hau.png';
+
+        }
 
         message_div.classList.add('message');
         message_div.innerHTML = `

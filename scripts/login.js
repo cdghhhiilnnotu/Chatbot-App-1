@@ -1,5 +1,13 @@
 const App = require('../scripts/app.js');
 const fs = require('fs');
+const {server_url} = require('../scripts/utils.js');
+
+// const response = await fetch(`https://97d5-34-143-211-7.ngrok-free.app/login/${username}`, {
+//     method: "GET",
+//     headers: { "Content-Type": "application/json" }
+// });
+
+// console.log(response.json())
 
 const login_btn = document.getElementById('login-btn');
 const login_fail = document.querySelector('.login-fail');
@@ -26,29 +34,60 @@ function save_chats(chats, file_path='chat_histories.json'){
       });
 }
 
-async function checkLogin(username, password, user_data) {
+async function checkLogin(username_id, password_id, user_data) {
     try {
-        const response = await fetch(`http://127.0.0.1:1237/login/${username}`);
+        // Set a timeout limit for the fetch request (5 seconds)
+        const timeout = 5000;
+        const controller = new AbortController();
+        const timeout_promise = new Promise((_, reject) => {
+            setTimeout(() => {
+                controller.abort(); // Cancel the fetch request
+                reject(new Error('Request Timeout'));
+            }, timeout);
+        });
+    
+        // Send the fetch request with a timeout
+        const response = await Promise.race([
+            fetch(`${server_url}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username_id, password: password_id }),
+                signal: controller.signal, // Attach AbortController
+            }),
+            timeout_promise,
+        ]);
+    
+        // Check if the response is OK (e.g., 200-299)
+        if (!response.ok) {
+            throw new Error(`Server responded with status ${response.status}`);
+        }
+    
         const data = await response.json();
-        console.log(data)
-        user_data.username = data.username;
-        user_data.name = data.name;
-        user_data.password = data.password;
-        user_data.others = data.others;
-        
-        save_chats(data.chats)
+        console.log(data);
+    
+        // Ensure `data` contains required properties
+        user_data.username = data.username || "";
+        user_data.name = data.name || "";
+        user_data.password = data.password || "";
+        user_data.others = data.others || {};
+    
+        // Check if `chats` exist before calling `save_chats`
+        save_chats(data.chats);
         localStorage.setItem('user_chats', JSON.stringify(data.chats));
-
-        return data.username == username && data.password == password;
+    
+        return data.username === username_id && data.password === password_id;
     } catch (error) {
         console.error('Lỗi khi gọi API:', error);
-        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+    
+        if (error.name === 'AbortError' || (error instanceof TypeError && error.message.includes('Failed to fetch'))) {
             showError('Không thể kết nối tới server! Vui lòng kiểm tra kết nối và thử lại.');
         } else {
             showError('Đã xảy ra lỗi! Vui lòng thử lại sau.');
         }
+    
         return false;
     }
+    
 }
 
 async function handleLogin() {
@@ -74,12 +113,6 @@ async function handleLogin() {
     // Kiểm tra đăng nhập với API
     let user_data = {};
     const is_valid_login = await checkLogin(username, password, user_data);
-    // const is_valid_login = true;
-    // user_data = {
-    //     username: "Nguyễn",
-    //     name: "Thành",
-    //     password: "Dương"
-    // }
     
     if (is_valid_login) {
         // Lưu thông tin đăng nhập vào localStorage

@@ -27,7 +27,7 @@ function getCurrentDateTime() {
 
 class App {
     constructor(){
-        this.name = JSON.parse(localStorage.getItem('user_infors')).username
+        this.name = JSON.parse(localStorage.getItem('user_infor')).username
         this.history_file = `${this.name}.json`;
         this.init();
     }
