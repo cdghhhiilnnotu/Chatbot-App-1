@@ -9,7 +9,7 @@ function createWindow() {
             contextIsolation: false
         }
     })
-
+    win.setMenuBarVisibility(false);
     win.loadFile('./views/app.html')
 }
 

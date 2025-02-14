@@ -158,7 +158,6 @@ class ChatView {
     }
 
     createMessageElement(container, type, message = '') {
-        console.log("'../assets/avatar.png'")
         const message_div = document.createElement('div');
         let img_src;
         if(localStorage.getItem('avatar_src')){

@@ -10,7 +10,6 @@ function generateRandomString(length) {
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    console.log(result)
     return result;
 }
 
@@ -32,16 +31,77 @@ class App {
         this.init();
     }
 
+    reset(){
+        let chat_history = {};
+        // Load chat history
+        chat_history = JSON.parse(localStorage.getItem('user_chats'));
+        // Create chat elements based on chat history
+        Object.keys(chat_history).forEach(group_name => {
+            const existing_chat = document.createElement('div');
+            existing_chat.classList.add('chat');
+            existing_chat.textContent = group_name.slice(0, 2).toUpperCase();
+    
+            existing_chat.addEventListener('click', () => {
+                setting_btn.classList.remove('active');
+                
+                // Remove active class from all chats
+                document.querySelectorAll('.chat').forEach(g => g.classList.remove('active'));
+                
+                // Add active class to clicked chat
+                existing_chat.classList.add('active');
+    
+        
+                // const chat_view = document.getElementById('chat-view');
+                // const setting_view = document.getElementById('setting-view');
+    
+                default_view.style.display = 'none';
+                setting_view.style.display = 'none';
+                chat_view.style.display = 'block';
+    
+                chat_view.innerHTML = `
+                    <div class="chat-header">
+                        <div class="header-info">
+                            <h2>Phòng Đào tạo</h2>
+                        </div>
+                        <div class="header-actions">
+                            <div class="exit-chat">
+                                <img src="../assets/light/exit.svg" alt="Exit Chat" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-area"></div>
+                `;
+    
+                const chat_area = chat_view.querySelector('.chat-area');
+                const channel_name = getCurrentDateTime();
+    
+                fetch('../views/chat.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        chat_area.innerHTML = html;
+                        new ChatView(group_name, channel_name);
+                    })
+                    .catch(error => console.error('Error:', error));
+    
+                chat_view.querySelector('.exit-chat').addEventListener('click', () => {
+                    existing_chat.classList.remove('active');
+                    chat_view.style.display = 'none';
+                    default_view.style.display = 'block';
+                });
+            });
+    
+            chat_container.insertBefore(existing_chat, chat_container.firstChild);
+        });
+    }
+
     init(){
         this.setup();
     }
 
     setup(){
         let chat_history = {};
-    
         // Load chat history
         chat_history = JSON.parse(localStorage.getItem('user_chats'));
-        console.log(chat_history)
         // Create chat elements based on chat history
         Object.keys(chat_history).forEach(group_name => {
             const existing_chat = document.createElement('div');
