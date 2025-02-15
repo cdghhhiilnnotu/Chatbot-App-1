@@ -13,6 +13,17 @@ function generateRandomString(length) {
     return result;
 }
 
+function convertDateFormat(dateString) {
+    // Tách phần ngày và giờ
+    const [datePart] = dateString.split(" ");  // Lấy phần "YYYY/MM/DD"
+    
+    // Tách các thành phần ngày tháng năm
+    const [year, month, day] = datePart.split("-");  
+
+    // Định dạng lại thành "DD/MM/YYYY"
+    return `${day}-${month}-${year}`;
+}
+
 function getCurrentDateTime() {
     const now = new Date();
     const year = now.getFullYear();
@@ -35,6 +46,7 @@ class App {
         let chat_history = {};
         // Load chat history
         chat_history = JSON.parse(localStorage.getItem('user_chats'));
+        print(chat_history)
         // Create chat elements based on chat history
         Object.keys(chat_history).forEach(group_name => {
             const existing_chat = document.createElement('div');
@@ -62,6 +74,7 @@ class App {
                     <div class="chat-header">
                         <div class="header-info">
                             <h2>Phòng Đào tạo</h2>
+                            <div class="header-time">.${convertDateFormat(chat_history[group_name].createdAt)}.</div>
                         </div>
                         <div class="header-actions">
                             <div class="exit-chat">
@@ -129,6 +142,7 @@ class App {
                     <div class="chat-header">
                         <div class="header-info">
                             <h2>Phòng Đào tạo</h2>
+                            <div class="header-time">.${convertDateFormat(chat_history[group_name].createdAt)}.</div>
                         </div>
                         <div class="header-actions">
                             <div class="exit-chat">
@@ -180,11 +194,13 @@ class App {
                         default_view.style.display = 'none';
                         setting_view.style.display = 'none';
                         chat_view.style.display = 'block';
-            
+                        
+                        const channel_name = getCurrentDateTime();
                         chat_view.innerHTML = `
                             <div class="chat-header">
                                 <div class="header-info">
                                     <h2>Phòng Đào tạo</h2>
+                                    <div class="header-time">${convertDateFormat(channel_name)}</div>
                                 </div>
                                 <div class="header-actions">
                                     <div class="exit-chat">
@@ -196,7 +212,6 @@ class App {
                         `;
             
                         const chat_area = chat_view.querySelector('.chat-area');
-                        const channel_name = getCurrentDateTime();
             
                         fetch('../views/chat.html')
                             .then(response => response.text())
