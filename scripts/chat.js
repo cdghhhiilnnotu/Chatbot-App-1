@@ -1,16 +1,25 @@
 const fs = require('fs');
-const {server_url} = require('../scripts/utils.js');
+const {server_url, speech_url} = require('../scripts/utils.js');
 
 class ChatView {
-    constructor(group_name, channel_name, message_file = 'chat_histories.json', serverurl = `${server_url}`) {
+    constructor(group_name, channel_name, message_file = 'chat_histories.json', serverurl = `${server_url}`, speechurl = `${speech_url}`) {
         this.group_name = group_name;
         this.channel_name = channel_name;
         this.server = serverurl;
+        this.speech = speechurl;
         this.message_file = message_file;
         this.user_infor = JSON.parse(localStorage.getItem('user_infor'));
 
         this.chat_input = document.querySelector('.chat-input');
         this.messages_container = document.querySelector('.chat-messages');
+
+        this.mic_input = document.querySelector('.mic-input');
+        // this.file_input = document.querySelector('.file-input');
+        this.mic_img = document.getElementById('mic-img');
+        
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.ws = null;
 
         this.init();
     }
@@ -19,23 +28,80 @@ class ChatView {
         this.updateChannelInfo();
         this.setupChatInput();
         this.loadMessages();
+        this.initializeWebSocket();
     }
 
-    updateChannelInfo() {
-        if (this.chat_input) {
-            this.chat_input.placeholder = `Send a message to ${this.group_name}`;
+    initializeWebSocket() {
+        this.ws = new WebSocket(`${this.speech}/${this.user_infor.username}`);
+
+        this.ws.onopen = () => {
+            console.log('WebSocket connected');
+        };
+
+        this.ws.onmessage = (event) => {
+            const response = JSON.parse(event.data);
+            if (response.status === 'success' && response.text) {
+                // Add the transcribed text to the chat input
+                this.chat_input.value += response.text + ' ';
+            }
+        };
+
+        this.ws.onerror = (error) => {
+            console.error('WebSocket Error:', error);
+        };
+
+        this.ws.onclose = () => {
+            console.log('WebSocket Connection Closed');
+            setTimeout(() => this.initializeWebSocket(), 3000);
+        };
+    }
+
+    async startRecording() {
+        try {
+            this.audioChunks = [];
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
+
+            const options = { mimeType: 'audio/webm; codecs=opus' };
+            this.mediaRecorder = new MediaRecorder(stream, options);
+
+            this.mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    this.audioChunks.push(event.data);
+                    if (this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.send(event.data);
+                    }
+                }
+            };
+
+            this.mediaRecorder.start(250);
+            this.mic_img.src = "../assets/dark/unmic.svg";
+            this.mic_input.classList.add('active');
+            this.chat_input.placeholder = `Đang nghe...`;
+
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
         }
     }
 
-    loadMessages() {
-        if (this.messages_container) {
-            const chat_history = JSON.parse(localStorage.getItem('user_chats'));
-            const messages = chat_history[this.group_name]?.messages || [];
+    stopRecording() {
+        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+            this.mediaRecorder.stop();
+            this.mediaRecorder.onstop = () => {
+                this.mic_img.src = "../assets/dark/mic.svg";
+                this.mic_input.classList.remove('active');
+                this.chat_input.placeholder = `Gửi tin nhắn đến phòng chat ID: ${this.group_name}`;
+                this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
 
-            messages.forEach(({ type, text }) =>
-                this.displayMessage(text, this.messages_container, type)
-            );
-            this.messages_container.scrollTop = this.messages_container.scrollHeight;
+                if (this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({ command: "start_recognition" }));
+                }
+            };
         }
     }
 
@@ -44,6 +110,23 @@ class ChatView {
             this.chat_input.addEventListener('input', () => {
                 const rows = this.chat_input.value.split('\n').length;
                 this.chat_input.rows = Math.min(rows, 5);
+            });
+            
+            // this.file_input.addEventListener('click', () => {
+            //     this.file_input.classList.add('active');
+            //     this.mic_input.classList.remove('active');
+            //     if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+            //         this.stopRecording();
+            //     }
+            // });
+            
+            this.mic_input.addEventListener('click', () => {
+                if (!this.mic_input.classList.contains('active')) {
+                    this.startRecording();
+                    // this.file_input.classList.remove('active');
+                } else {
+                    this.stopRecording();
+                }
             });
 
             this.chat_input.addEventListener('keypress', async (e) => {
@@ -62,6 +145,24 @@ class ChatView {
                     this.messages_container.scrollTop = this.messages_container.scrollHeight;
                 }
             });
+        }
+    }
+
+    updateChannelInfo() {
+        if (this.chat_input) {
+            this.chat_input.placeholder = `Gửi tin nhắn đến phòng chat ID: ${this.group_name}`;
+        }
+    }
+
+    loadMessages() {
+        if (this.messages_container) {
+            const chat_history = JSON.parse(localStorage.getItem('user_chats'));
+            const messages = chat_history[this.group_name]?.messages || [];
+
+            messages.forEach(({ type, text }) =>
+                this.displayMessage(text, this.messages_container, type)
+            );
+            this.messages_container.scrollTop = this.messages_container.scrollHeight;
         }
     }
 
