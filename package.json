@@ -11,7 +11,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "electron": "33.3.2"
+    "electron": "^33.3.2"
   },
   "dependencies": {
     "node-fetch": "^3.3.2"
