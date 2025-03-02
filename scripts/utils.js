@@ -1,5 +1,5 @@
-const base = 'http://127.0.0.1:1237';
-// const base = 'https://5365-35-196-109-227.ngrok-free.app';
+// const base = 'http://127.0.0.1:1237';
+const base = 'https://54f5-34-105-108-239.ngrok-free.app';
 
 const server_url = base; // Directly use base URL
 
