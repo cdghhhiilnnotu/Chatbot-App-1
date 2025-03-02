@@ -46,7 +46,6 @@ class App {
         let chat_history = {};
         // Load chat history
         chat_history = JSON.parse(localStorage.getItem('user_chats'));
-        print(chat_history)
         // Create chat elements based on chat history
         Object.keys(chat_history).forEach(group_name => {
             const existing_chat = document.createElement('div');
@@ -78,7 +77,7 @@ class App {
                         </div>
                         <div class="header-actions">
                             <div class="exit-chat">
-                                <img src="../assets/light/exit.svg" alt="Exit Chat" />
+                                <img src="../assets/dark/exit.svg" alt="Exit Chat" />
                             </div>
                         </div>
                     </div>
@@ -146,7 +145,7 @@ class App {
                         </div>
                         <div class="header-actions">
                             <div class="exit-chat">
-                                <img src="../assets/light/exit.svg" alt="Exit Chat" />
+                                <img src="../assets/dark/exit.svg" alt="Exit Chat" />
                             </div>
                         </div>
                     </div>
@@ -204,7 +203,7 @@ class App {
                                 </div>
                                 <div class="header-actions">
                                     <div class="exit-chat">
-                                        <img src="../assets/light/exit.svg" alt="Exit Chat" />
+                                        <img src="../assets/dark/exit.svg" alt="Exit Chat" />
                                     </div>
                                 </div>
                             </div>

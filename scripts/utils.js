@@ -1,4 +1,9 @@
-const server_url = 'http://127.0.0.1:1237'
-// const server_url = "https://8634-34-72-17-4.ngrok-free.app"
+// const base = 'http://127.0.0.1:1237';
+const base = 'https://54f5-34-105-108-239.ngrok-free.app';
 
-module.exports = {server_url};
+const server_url = base; // Directly use base URL
+
+// Convert HTTP to WebSocket (WS/WSS)
+const speech_url = base.replace(/^http/, "ws") + "/ws/audio";
+
+module.exports = { server_url, speech_url };
