@@ -34,7 +34,10 @@
 
     ```javascript
     // scripts/utils.js
-    const SERVER_URL = 'http://your-chatbot-server-url';
+    // sử dụng cho ngrok
+    const base = 'https://54f5-34-105-108-239.ngrok-free.app';
+    // sử dụng cho local
+    const base = 'http://127.0.0.1:1237';
     ```
 4.  **Chạy ứng dụng**:
 
